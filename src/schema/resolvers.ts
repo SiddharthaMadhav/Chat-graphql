@@ -1,13 +1,13 @@
 import { db, User, Message } from '../data/database';
 
-const encodeCursor = (id: string) => Buffer.from(id).toString('base64');
-const decodeCursor = (cursor: string) => Buffer.from(cursor, 'base64').toString();
+const encodeCursor = (id: number) => Buffer.from(id.toString()).toString('base64');
+const decodeCursor = (cursor: string) => parseInt(Buffer.from(cursor, 'base64').toString(), 10);
 
 export const resolvers = {
     Query: {
         users : () => db.getAllUsers(),
-        user: (_: any, {id}: {id: string}) => db.getUserById(id),
-        messages: (_: any, {userId, first = 10, after}: {userId: string, first: number, after?: string}) => {
+        user: (_: any, {id}: {id: number}) => db.getUserById(id),
+        messages: (_: any, {userId, first = 10, after}: {userId: number, first: number, after?: string}) => {
             const allMessages = db.getMessagesForUser(userId);
             let filteredMessages = [...allMessages];
             if (after) {
@@ -44,7 +44,7 @@ export const resolvers = {
             db.createUser(username, email);
         },
 
-        sendMessage: (_: any, { content, senderId, receiverId }: { content: string, senderId: string, receiverId: string }) => {
+        sendMessage: (_: any, { content, senderId, receiverId }: { content: string, senderId: number, receiverId: number }) => {
             return db.createMessage(content, senderId, receiverId);
           }
       
@@ -87,7 +87,7 @@ export const resolvers = {
     },
 
     Message: {
-        sender: (parent: Message) => db.getUserById(parent.senderId),
-        receiver: (parent: Message) => db.getUserById(parent.receiverId)
+        sender: (parent: Message) => parent.senderId.toString(),
+        receiver: (parent: Message) => parent.receiverId.toString()
     }
 }

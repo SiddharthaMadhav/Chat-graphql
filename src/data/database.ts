@@ -1,52 +1,54 @@
 import {v4 as uuidv4} from 'uuid';
 
 export interface User {
-    id: string;
+    id: number;
     username: string;
     email: string;
     createdAt: Date;
 }
 
 export interface Message{
-    id: string;
+    id: number;
     content: string;
-    senderId: string;
-    receiverId: string;
+    senderId: number;
+    receiverId: number;
     createdAt: Date;
 }
 
 export class Database {
     private users: User[] = [];
     private messages: Message[] = [];
+    private nextUserId: number = 1; 
+    private nextMessageId: number = 1; 
 
     getAllUsers(): User[] {
         return this.users;
     }
 
-    getUserById(id: string): User | undefined {
+    getUserById(id: number): User | undefined { 
         return this.users.find(user => user.id === id);
     }
 
     createUser(username: string, email: string): User {
         const newUser: User = {
-            id: uuidv4(),
+            id: this.nextUserId++, 
             username,
             email,
             createdAt: new Date()
-          };
-          this.users.push(newUser);
-          return newUser;
+        };
+        this.users.push(newUser);
+        return newUser;
     }
 
-    getMessagesForUser(userId: string): Message[] {
+    getMessagesForUser(userId: number): Message[] { 
         return this.messages.filter(
           msg => msg.senderId === userId || msg.receiverId === userId
         );
     }
 
-    createMessage(content: string, senderId: string, receiverId: string): Message {
+    createMessage(content: string, senderId: number, receiverId: number): Message { 
         const newMessage: Message = {
-            id: uuidv4(),
+            id: this.nextMessageId++, 
             content,
             senderId,
             receiverId,
@@ -57,7 +59,7 @@ export class Database {
     }
 }
 
-//Adding some initial data
+
 export const db = new Database();
 
 const user1 = db.createUser("alice", "alice@example.com");
