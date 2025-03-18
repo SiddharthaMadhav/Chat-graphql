@@ -5,6 +5,7 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { typeDefs } from './schema/typeDefs';
 import { resolvers } from './schema/resolvers';
 import { RateLimiter } from './middleware/rateLimit';
+import { db } from './data/database';
 
 
 async function startApolloServer(){
@@ -14,6 +15,10 @@ async function startApolloServer(){
     const rateLimiter = new RateLimiter();
 
     app.use(rateLimiter.middleware());
+
+    app.get("/test", (req, res) => {
+        res.send(db.getMessagesForUser(1))
+    })
 
     const server = new ApolloServer({
         typeDefs,

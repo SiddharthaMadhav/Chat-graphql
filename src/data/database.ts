@@ -64,5 +64,5 @@ export const db = new Database();
 
 const user1 = db.createUser("alice", "alice@example.com");
 const user2 = db.createUser("bob", "bob@example.com");
-db.createMessage("Hey Bob, how are you?", user1.id, user2.id);
-db.createMessage("I'm good, Alice! How about you?", user2.id, user1.id);
+const message1 = db.createMessage("Hey Bob, how are you?", user1.id, user2.id);
+const message2 = db.createMessage("I'm good, Alice! How about you?", user2.id, user1.id);
