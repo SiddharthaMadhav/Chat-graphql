@@ -6,7 +6,7 @@ export const typeDefs = gql`
         username: String!
         email: String!
         createdAt: String!
-        messages(first: Int, after: String): MessageConnection!
+        messages: [Message!]! 
     }
 
     type Message {
@@ -17,29 +17,13 @@ export const typeDefs = gql`
         createdAt: String!
     }
 
-    type PageInfo {
-        hasNextPage: Boolean!
-        endCursor: String
-    }
-
-    type MessageConnection {
-        edges: [MessageEdge!]!
-        pageInfo: PageInfo!
-        totalCount: Int!
-    }
-    
-    type MessageEdge {
-        node: Message!
-        cursor: String!
-    }
-        
     type Query {
         # User queries
         users: [User!]!
         user(id: ID!): User
         
-        # Message queries with pagination
-        messages(userId: ID!, first: Int, after: String): MessageConnection!
+        # Message queries without pagination
+        messages(userId: ID!): [Message!]!
     }
 
     type Mutation {
